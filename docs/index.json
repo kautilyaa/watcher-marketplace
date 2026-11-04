@@ -1,7 +1,7 @@
 {
   "index": {
     "format": 1,
-    "generated_at": "2026-11-04T10:49:37.041841Z",
+    "generated_at": "2026-11-04T15:50:30.392736Z",
     "items": [
       {
         "categories": [
@@ -37,6 +37,7 @@
         ]
       }
     ],
+    "key": "did:key:z6Mkm8G2KVKPtF8RudfvPP2J6BDQSmpmGkQUMw9FWdwgWdfS",
     "name": "Watcher Marketplace",
     "publishers": [
       {
@@ -50,5 +51,5 @@
     "revoked": [],
     "url": "https://kautilyaa.github.io/watcher-marketplace/"
   },
-  "signature": "z2HqiyeZCQ3iML9QZGi9puQRkvre4fH3KaSRXeKSUHNHQXBPPtqDFwLk3n1wunksn3nt6Bd6mgscrfLEnfq2dv6Ev"
+  "signature": "z4sXeWFmUofNxBoSEXMdkM27U58ATMeczSj11KDVpMkfAZVFAoY1cV6Ln694kQvmcxDAu3n2bBv37r4Dc4timcaB8"
 }

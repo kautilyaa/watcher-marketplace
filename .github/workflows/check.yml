@@ -1,0 +1,35 @@
+name: check
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  PYTHONPATH: tools
+  REGISTRY_DID: did:key:z6Mkm8G2KVKPtF8RudfvPP2J6BDQSmpmGkQUMw9FWdwgWdfS
+  MARKET: uv run --no-project --python 3.12 --with pydantic==2.13.5 python -m watcher_market
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Lint the registry source (no keys)
+        run: $MARKET lint registry
+      - name: Check the built site's signatures
+        run: $MARKET check docs --did "$REGISTRY_DID"
+      - name: The built site matches the source
+        if: github.event_name == 'push'
+        run: $MARKET lint registry --site docs
+      - name: Flag publisher changes
+        if: github.event_name == 'pull_request'
+        run: |
+          git diff --name-only --diff-filter=M "origin/${{ github.base_ref }}...HEAD" -- registry/publishers/ |
+            while read -r f; do echo "::warning file=$f::a publisher file changed: a maintainer checks a new did by hand"; done
