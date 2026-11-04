@@ -2,7 +2,7 @@
 
 The official registry for Watcher's Marketplace: extensions, skill packs, starter bots (bot templates), MCP presets
 and sticker packs. The site under `docs/` is served by GitHub Pages at
-<https://kautilyaa.github.io/watcher-marketplace/>; Watcher fetches `index.json` and the bundles from there and
+<https://ayashasw.github.io/watcher-marketplace/>; Watcher fetches `index.json` and the bundles from there and
 verifies every signature before it shows or installs anything.
 
 ## Layout

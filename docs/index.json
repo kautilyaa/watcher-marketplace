@@ -1,7 +1,7 @@
 {
   "index": {
     "format": 1,
-    "generated_at": "2026-11-04T15:50:30.392736Z",
+    "generated_at": "2026-11-04T18:31:46.203384Z",
     "items": [
       {
         "categories": [
@@ -44,12 +44,12 @@
         "did": "did:key:z6MkoHxTnfZh6cS6MQfwyXcd7MtfRtStA1ded9GHgV3F2Up2",
         "id": "watcher",
         "name": "Watcher",
-        "url": "https://github.com/kautilyaa/watcher-marketplace",
+        "url": "https://github.com/ayashasw/watcher-marketplace",
         "verified": true
       }
     ],
     "revoked": [],
-    "url": "https://kautilyaa.github.io/watcher-marketplace/"
+    "url": "https://ayashasw.github.io/watcher-marketplace/"
   },
-  "signature": "z4sXeWFmUofNxBoSEXMdkM27U58ATMeczSj11KDVpMkfAZVFAoY1cV6Ln694kQvmcxDAu3n2bBv37r4Dc4timcaB8"
+  "signature": "z28NxZz56yzR1HubRXcEFLrhie5vAjSkm8ZBJQCqEKQyDrKY3fJA2A612HGBnkVqayP4CX1exymZveAM2kC2W55AS"
 }
