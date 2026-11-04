@@ -1,0 +1,54 @@
+{
+  "index": {
+    "format": 1,
+    "generated_at": "2026-11-04T10:49:37.041841Z",
+    "items": [
+      {
+        "categories": [
+          "Marketing"
+        ],
+        "description": "Thirteen skills that run an Instagram account, packaged from Jake Schincariol's MIT-licensed [instagram-agent-skill](https://github.com/Jakeschincariol/instagram-agent-skill).\n\n- **Reels**: hooks from 26 formulas, scored before you film.\n- **Captions**: shows what the feed shows before \"… more\".\n- **Carousels, stories, comments, replies, DMs** and repurposing.\n- **Profile audit**: a score out of 100 with rewrites.\n- **Weekly plan** and a viral-reel finder for your niche.\n- **Humanizer**: strips slop vocabulary and watermark characters, then checks the draft.\n\nNothing is posted: these skills write, you post. Skills with scripts also add a tools extension, which goes through its own approval.",
+        "homepage": "https://github.com/Jakeschincariol/instagram-agent-skill",
+        "icon": "📸",
+        "id": "watcher/instagram",
+        "kind": "skill_pack",
+        "license": "MIT",
+        "publisher": "watcher",
+        "summary": "Thirteen skills that plan, write and review Instagram posts: reels, captions, carousels, stories, DMs, profile audits and a humanizer.",
+        "tags": [
+          "instagram",
+          "social-media",
+          "content",
+          "reels",
+          "captions"
+        ],
+        "title": "Instagram",
+        "verified": false,
+        "versions": [
+          {
+            "bundle": "bundles/watcher/instagram/1.0.0.tar.gz",
+            "changelog": "First marketplace release of the Instagram agent skill (13 skills), MIT, by Jake Schincariol.",
+            "published_at": "2026-11-04T10:49:34.013832Z",
+            "sha256": "1e50629a55864762fd49dee9d03686b4acc0a40bdd751d5a7e2bb60cad26b0e2",
+            "signature": "z47ht3PFYBEguzEatTvUvnqhYH58PkYKfEKbVCnDitWJw8m7J1ss99kxzd4nX63pBESSrNpY9rX2qeqcZvZYNBXY6",
+            "size": 64571,
+            "version": "1.0.0"
+          }
+        ]
+      }
+    ],
+    "name": "Watcher Marketplace",
+    "publishers": [
+      {
+        "did": "did:key:z6MkoHxTnfZh6cS6MQfwyXcd7MtfRtStA1ded9GHgV3F2Up2",
+        "id": "watcher",
+        "name": "Watcher",
+        "url": "https://github.com/kautilyaa/watcher-marketplace",
+        "verified": true
+      }
+    ],
+    "revoked": [],
+    "url": "https://kautilyaa.github.io/watcher-marketplace/"
+  },
+  "signature": "z2HqiyeZCQ3iML9QZGi9puQRkvre4fH3KaSRXeKSUHNHQXBPPtqDFwLk3n1wunksn3nt6Bd6mgscrfLEnfq2dv6Ev"
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "skill_pack",
+  "title": "Instagram",
+  "summary": "Thirteen skills that plan, write and review Instagram posts: reels, captions, carousels, stories, DMs, profile audits and a humanizer.",
+  "description": "Thirteen skills that run an Instagram account, packaged from Jake Schincariol's MIT-licensed [instagram-agent-skill](https://github.com/Jakeschincariol/instagram-agent-skill).\n\n- **Reels**: hooks from 26 formulas, scored before you film.\n- **Captions**: shows what the feed shows before \"… more\".\n- **Carousels, stories, comments, replies, DMs** and repurposing.\n- **Profile audit**: a score out of 100 with rewrites.\n- **Weekly plan** and a viral-reel finder for your niche.\n- **Humanizer**: strips slop vocabulary and watermark characters, then checks the draft.\n\nNothing is posted: these skills write, you post. Skills with scripts also add a tools extension, which goes through its own approval.",
+  "categories": ["Marketing"],
+  "tags": ["instagram", "social-media", "content", "reels", "captions"],
+  "homepage": "https://github.com/Jakeschincariol/instagram-agent-skill",
+  "license": "MIT",
+  "icon": "📸"
+}
