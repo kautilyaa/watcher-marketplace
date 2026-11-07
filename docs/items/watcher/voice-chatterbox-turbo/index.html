@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'">
+<meta name="referrer" content="no-referrer">
+<title>Chatterbox Turbo voice (large, watermarked) · Watcher Marketplace</title>
+<link rel="stylesheet" href="../../../catalog.css">
+</head>
+<body>
+<header>
+<p><a href="../../../index.html">← Watcher Marketplace</a></p>
+<h1><span class="icon">🗣️</span>Chatterbox Turbo voice (large, watermarked)</h1>
+<p>Resemble AI&#x27;s Chatterbox Turbo English voice. Large (3.0 GB); every clip carries Resemble&#x27;s inaudible Perth watermark.</p>
+</header>
+<main>
+<dl class="facts">
+<dt>Id</dt><dd><code>watcher/voice-chatterbox-turbo</code></dd>
+<dt>Kind</dt><dd>Voice models</dd>
+<dt>Publisher</dt><dd>Watcher (verified by this registry)<br><code>did:key:z6MkoHxTnfZh6cS6MQfwyXcd7MtfRtStA1ded9GHgV3F2Up2</code></dd>
+<dt>License</dt><dd>MIT</dd>
+<dt>Homepage</dt><dd><a href="https://huggingface.co/ResembleAI/chatterbox-turbo" rel="noopener noreferrer nofollow">https://huggingface.co/ResembleAI/chatterbox-turbo</a></dd>
+<dt>Tags</dt><dd><span class="pill">Other</span><span class="pill">voice</span><span class="pill">tts</span><span class="pill">on-device</span><span class="pill">calls</span><span class="pill">watermarked</span></dd>
+</dl>
+<section class="description">
+<p>Resemble AI&#x27;s <strong>Chatterbox Turbo</strong> English text-to-speech model as a voice for calls and reading aloud, with its built-in voice.</p>
+<ul><li><strong>Large:</strong> 3.0 GB of model files plus PyTorch 2.6 and the <code>chatterbox-tts</code> 0.1.7 packages: about 0.3 GB on macOS, about 3.3 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries). Only the files Turbo loads are pinned (<code>t3_turbo_v1</code>, <code>s3gen_meanflow</code>, <code>ve</code>, <code>conds.pt</code>, tokenizer); the original Chatterbox&#x27;s 1 GB <code>s3gen.safetensors</code> is not downloaded.</li><li><strong>Always watermarked:</strong> every clip carries Resemble AI&#x27;s <strong>Perth</strong> watermark, inaudible and built to survive MP3 compression and editing. The engine cannot turn it off. Perth comes from a pinned git commit (<code>ff1c8ac55a976971245cdd53c18d6131ca00d993</code> of github.com/resemble-ai/Perth, version 1.1.0) because <code>chatterbox-tts</code> asks for Perth&#x27;s moving <code>master</code> branch.</li><li><strong>Voices:</strong> one built-in voice. No voice cloning, no speed control. May be slow without a GPU.</li><li><strong>Licence:</strong> weights MIT (Resemble AI); <code>chatterbox-tts</code> and <code>resemble-perth</code> MIT.</li></ul>
+<p><strong>How it installs.</strong> This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher&#x27;s local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (<code>uv pip install --require-hashes --no-deps</code>), and runs the engine offline in a separate process. It needs the local voice service (<code>RWCTL_LOCAL_SETUP=1</code>); Kokoro stays the default and takes over whenever this voice isn&#x27;t ready. Uninstalling deletes the files and the venv.</p>
+</section>
+<h2>Versions</h2>
+<ol class="versions">
+<li>
+<h3>1.0.0</h3>
+<p class="muted">Published 2026-11-06 · 97.7 KiB · <a href="../../../bundles/watcher/voice-chatterbox-turbo/1.0.0.tar.gz">bundle</a> · sha256 <code>e89848702de2c4cb9a37f0c612a0ef196c4785e2d39a693255ff91d1692db2d4</code></p>
+<pre>First version: `ResembleAI/chatterbox-turbo` at commit `749d1c1a46eb10492095d68fbcf55691ccf137cd` (the nine files `tts_turbo.py` loads); `chatterbox-tts` 0.1.7 hash-locked, Perth from git commit `ff1c8ac55a976971245cdd53c18d6131ca00d993`.</pre>
+</li>
+</ol>
+<section class="add">
+<h2>Add it to Watcher</h2>
+<p>An admin adds this registry in Watcher on <b>Marketplace → Registries</b> with its address:</p>
+<pre>https://ayashasw.github.io/watcher-marketplace/</pre>
+<p>Installing an item then takes an admin's approval in Watcher.</p>
+</section>
+</main>
+<footer>Built 2026-11-06T18:46:04.144248Z from a signed index (<a href="../../../index.json">index.json</a>).</footer>
+</body>
+</html>

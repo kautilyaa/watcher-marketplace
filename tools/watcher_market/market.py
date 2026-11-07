@@ -84,7 +84,7 @@ import tempfile
 import zlib
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, NamedTuple
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, StringConstraints, ValidationError, model_validator
 
@@ -108,9 +108,10 @@ class Strict(BaseModel):
 
 KINDS = (
     "extension", "skill_pack", "bot_template", "mcp_preset", "sticker_pack",
-    "lens_suite", "avatar_pack", "persona_pack", "check_pack",
+    "lens_suite", "avatar_pack", "persona_pack", "check_pack", "voice_model",
 )
-CATEGORIES = ("Productivity", "Engineering", "Support", "Marketing", "Finance", "Data", "Fun", "Integrations")
+CATEGORIES = ("Productivity", "Engineering", "Support", "Marketing", "Finance", "Data", "Fun", "Integrations",
+              "Healthcare", "Other")
 # The document at the root of each kind's bundle.
 KIND_FILE = {
     "extension": "extension.json",
@@ -122,11 +123,22 @@ KIND_FILE = {
     "avatar_pack": "avatars.json",
     "persona_pack": "personas.json",
     "check_pack": "checks.json",
+    "voice_model": "voice.json",
 }
 # A kind's shape in an index: any lower-case word, so an index listing a kind newer than this Watcher still verifies
 # (wctl shows such an item as needing a newer Watcher); publishers' sources keep to KINDS.
 KIND_PATTERN = r"^[a-z][a-z_]{2,23}$"
 MAX_BUNDLE_BYTES = 10 << 20
+# Kinds wctl caps lower than MAX_BUNDLE_BYTES (control/internal/market/fetch.go bundleCap): a voice model's bundle is
+# only its voice.json (pins and a lock), never weights.
+KIND_BUNDLE_BYTES = {"voice_model": 512 << 10}
+
+
+def bundle_cap(kind: str) -> int:
+    """The most a bundle of ``kind`` may be (packed)."""
+    return KIND_BUNDLE_BYTES.get(kind, MAX_BUNDLE_BYTES)
+
+
 # wctl's extensions.ReadArchive limits (control/internal/extensions/extensions.go), which read_archive applies.
 MAX_FILES = 200
 MAX_UNPACKED_BYTES = 50 << 20
@@ -263,7 +275,8 @@ class MarketItem(Strict):
     summary: str = Field(min_length=1, max_length=200)
     description: str = Field("", max_length=4000)
     categories: list[
-        Literal["Productivity", "Engineering", "Support", "Marketing", "Finance", "Data", "Fun", "Integrations"]
+        Literal["Productivity", "Engineering", "Support", "Marketing", "Finance", "Data", "Fun", "Integrations",
+                "Healthcare", "Other"]
     ] = Field(default_factory=list, max_length=3)
     tags: list[Tag] = Field(default_factory=list, max_length=10)
     homepage: HttpsUrl | None = None
@@ -693,6 +706,189 @@ class CheckPackDoc(Strict):
         return self
 
 
+# --- voice models (voice_model): pins of a call/reading voice, never its weights or code -------------------------
+# Each engine is one of Watcher's own adapters (src/watcher/voice/plugins/<engine>.py); a bundle only pins the
+# Hugging Face files it reads and the Python packages it needs (a hash-locked requirements text).
+VOICE_ENGINES = ("phonon", "pocket_tts", "qwen3_tts", "chatterbox_turbo")
+HfRepo = Annotated[str, StringConstraints(pattern=r"^[A-Za-z0-9][A-Za-z0-9-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")]
+VoiceId = Annotated[str, StringConstraints(pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,47}$")]
+MAX_REQUIREMENTS_CHARS = 256 << 10
+
+
+class VoiceFile(Strict):
+    """One pinned file of a huggingface.co repo, as ``watcher.voice.models.ModelFile`` pins Kokoro's."""
+
+    repo: HfRepo
+    commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+    path: str = Field(pattern=r"^[A-Za-z0-9_][A-Za-z0-9._-]*(/[A-Za-z0-9_][A-Za-z0-9._-]*)*$", max_length=240)
+    size: int = Field(ge=1, le=20 << 30)
+    sha256: str = Field(pattern=r"^([0-9a-f]{64}|git:[0-9a-f]{40})$")
+
+    @model_validator(mode="after")
+    def _relative(self) -> VoiceFile:
+        if any(part in (".", "..") for part in self.path.split("/")):
+            raise ValueError(f"{self.path}: a file path stays inside the model folder")
+        return self
+
+
+class VoiceEntry(Strict):
+    id: VoiceId
+    label: str = Field(min_length=1, max_length=60)
+    file: str | None = Field(None, max_length=240)
+
+
+class VoiceLicense(Strict):
+    weights: str = Field(min_length=1, max_length=80)
+    code: str = Field(min_length=1, max_length=80)
+    url: PublicUrl
+    attribution: str | None = Field(None, min_length=1, max_length=500)
+
+
+class VoiceModelDoc(Strict):
+    """``voice.json``: a voice model for Watcher's on-device voice: which built-in engine reads it, its voices, the
+    pinned Hugging Face files it loads and the hash-locked packages its engine needs (installed into its own venv)."""
+
+    engine: Literal["phonon", "pocket_tts", "qwen3_tts", "chatterbox_turbo"]
+    title: str = Field(min_length=1, max_length=60)
+    languages: list[Annotated[str, StringConstraints(pattern=r"^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$")]] = Field(
+        min_length=1, max_length=30)
+    voices: list[VoiceEntry] = Field(min_length=1, max_length=64)
+    default_voice: VoiceId
+    sample_rate: Literal[24000]
+    size_bytes: int = Field(ge=1)
+    license: VoiceLicense
+    watermark: str | None = Field(None, min_length=1, max_length=300)
+    notes: str | None = Field(None, min_length=1, max_length=600)
+    files: list[VoiceFile] = Field(min_length=1, max_length=200)
+    requirements: str = Field(min_length=1, max_length=MAX_REQUIREMENTS_CHARS)
+    python: str = Field(max_length=40, pattern=r"^(>=|<=|==|~=|<|>|!=)[0-9]+(\.[0-9]+){0,2}"
+                                               r"(,(>=|<=|==|~=|<|>|!=)[0-9]+(\.[0-9]+){0,2}){0,3}$")
+
+    @model_validator(mode="after")
+    def _consistent(self) -> VoiceModelDoc:
+        if len(set(self.languages)) != len(self.languages):
+            raise ValueError("languages: each once")
+        paths = [f.path for f in self.files]
+        if len(set(paths)) != len(paths):
+            raise ValueError("files: two files share a path (every file lands in one model folder)")
+        ids = [v.id for v in self.voices]
+        if len(set(ids)) != len(ids):
+            raise ValueError("voices: two voices share an id")
+        if self.default_voice not in ids:
+            raise ValueError(f"default_voice {self.default_voice} is not one of the voices")
+        for v in self.voices:
+            if v.file is not None and v.file not in paths:
+                raise ValueError(f"voice {v.id}: its file {v.file} is not one of the pinned files")
+        total = sum(f.size for f in self.files)
+        if self.size_bytes != total:
+            raise ValueError(f"size_bytes is {self.size_bytes}, but the files add up to {total}")
+        parse_requirements(self.requirements)
+        return self
+
+
+class LockRequirement(NamedTuple):
+    """One requirement of a voice model's lock: pinned with hashes (``version``), or Perth's git commit (``git``);
+    ``line`` is it on one line, as a requirements file takes it."""
+
+    name: str
+    version: str | None
+    git: str | None
+    line: str
+
+
+_PINNED = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)(\[[A-Za-z0-9._,-]+\])?==([A-Za-z0-9.+!_-]+)(\s*;\s*[ -~]+)?$")
+_GIT = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)\s*@\s*(git\+https://github\.com/[A-Za-z0-9-]+/[A-Za-z0-9._-]+"
+                  r"@[0-9a-f]{40})(\s*;\s*[ -~]+)?$")
+_HASH = re.compile(r"^--hash=sha256:[0-9a-f]{64}$")
+# The one package a voice model may take from a git commit (Chatterbox's Perth watermarker has no pinned release).
+GIT_PACKAGES = ("resemble-perth",)
+
+
+def parse_requirements(text: str) -> list[LockRequirement]:
+    """A voice model's ``requirements``: every requirement pinned ``==`` with at least one ``--hash=sha256:``, or
+    (Perth only) ``name @ git+https://github.com/<owner>/<repo>@<commit>``; comments and environment markers are fine,
+    any other option (an index URL, ``-e``, ``-r``, ``--find-links`` …) is refused."""
+    if len(text) > MAX_REQUIREMENTS_CHARS:
+        raise ValueError(f"requirements: at most {MAX_REQUIREMENTS_CHARS} characters")
+    logical, pending = [], ""
+    for raw in text.splitlines():
+        line = raw.strip()
+        if line.startswith("#"):
+            continue
+        if " #" in line:
+            line = line.split(" #", 1)[0].rstrip()
+        if line.endswith("\\"):
+            pending += line[:-1].strip() + " "
+            continue
+        line = (pending + line).strip()
+        pending = ""
+        if line:
+            logical.append(line)
+    if pending.strip():
+        logical.append(pending.strip())
+    out: list[LockRequirement] = []
+    for line in logical:
+        spec, _, options = line.partition(" --")
+        spec = spec.strip()
+        hashes = ["--" + o.strip() for o in options.split(" --")] if options else []
+        where = f"requirements: {spec[:80]}"
+        if spec.startswith("-"):
+            raise ValueError(f"{where}: options and index URLs are not allowed, only pinned packages with hashes")
+        for h in hashes:
+            if not _HASH.match(h):
+                raise ValueError(f"{where}: the only option allowed is --hash=sha256:<64 hex>")
+        git = _GIT.match(spec)
+        if git:
+            name = git.group(1).lower().replace("_", "-")
+            if name not in GIT_PACKAGES:
+                raise ValueError(f"{where}: only {', '.join(GIT_PACKAGES)} may come from a git commit")
+            if hashes:
+                raise ValueError(f"{where}: a git requirement is pinned by its commit, without hashes")
+            out.append(LockRequirement(git.group(1), None, git.group(2), spec))
+            continue
+        pinned = _PINNED.match(spec)
+        if not pinned:
+            raise ValueError(f"{where}: each requirement is pinned exactly (name==version) with --hash lines")
+        if not hashes:
+            raise ValueError(f"{where}: has no --hash=sha256: (the lock is installed with --require-hashes)")
+        out.append(LockRequirement(pinned.group(1), pinned.group(3), None, " ".join([spec, *hashes])))
+    if not out:
+        raise ValueError("requirements: no packages")
+    return out
+
+
+_PHONON = ("gradium/phonon-31m-en", "92741c5b07d085ff840e26fea8ce43110b87852f")
+# ``watcher market new --kind voice_model``: a working Phonon-31M (Apache-2.0) pin set, to replace with the model's
+# own files (Hugging Face API: /api/models/<repo>?blobs=true) and lock (uv pip compile --generate-hashes). The lock
+# here keeps only the CPython 3.12 macOS arm64 and Linux x86_64 wheels.
+VOICE_SCAFFOLD: dict[str, Any] = {
+    "engine": "phonon", "languages": ["en"],
+    "voices": [{"id": "default", "label": "Default", "file": "default-voice.safetensors"}],
+    "default_voice": "default", "sample_rate": 24000, "size_bytes": 4634 + 64512352 + 277967 + 256136,
+    "license": {"weights": "Apache-2.0", "code": "MIT OR Apache-2.0", "url": "https://huggingface.co/gradium/phonon-31m-en"},
+    "files": [
+        {"repo": _PHONON[0], "commit": _PHONON[1], "path": "config.json", "size": 4634,
+         "sha256": "git:11cfeb2513febe31358a8ff942093e0b2c28710a"},
+        {"repo": _PHONON[0], "commit": _PHONON[1], "path": "model.q8.gguf", "size": 64512352,
+         "sha256": "a7d9aad2cd6dc66473f24a08bc6d2939030ef4d751ef82349361fbef3272dbae"},
+        {"repo": _PHONON[0], "commit": _PHONON[1], "path": "tokenizer.json", "size": 277967,
+         "sha256": "git:70d39980cb2154bd364dbed8424b1343923a03e2"},
+        {"repo": _PHONON[0], "commit": _PHONON[1], "path": "default-voice.safetensors", "size": 256136,
+         "sha256": "dc537478eaadc1a5257fcda2e3501ab81e14c111a5d95a5838f350db2afd0f1a"},
+    ],
+    "requirements": (
+        "numpy==2.5.4 \\\n"
+        "    --hash=sha256:b11e8fda06a7d69f15ebf542660b74466c2e51094800c1fb794f47ad4faeef17 \\\n"
+        "    --hash=sha256:9cb18a327b49c5c337f972b03682f6a49855525faaf3c0d3e9c96cd0fd8880a8 \\\n"
+        "    --hash=sha256:fbde6962867ee75b48b0ee29b2b9372ec5d617799dbaf38e82dc0596f2f7738a\n"
+        "ptts==0.6.0 \\\n"
+        "    --hash=sha256:28ca52dceb36e128b040dc6d566975e01a5fe4f8b297d4d87165ec51c65be88c \\\n"
+        "    --hash=sha256:6efb197e73af258e278e90fcc771f36022c5123e9ecca2fca50ae90472caa60c\n"
+    ),
+    "python": ">=3.12,<3.14",
+}
+
+
 BUNDLE_DOCS: dict[str, type[Strict]] = {
     "SkillPackMeta": SkillPackMeta,
     "TemplateDoc": TemplateDoc,
@@ -702,6 +898,7 @@ BUNDLE_DOCS: dict[str, type[Strict]] = {
     "AvatarPackDoc": AvatarPackDoc,
     "PersonaPackDoc": PersonaPackDoc,
     "CheckPackDoc": CheckPackDoc,
+    "VoiceModelDoc": VoiceModelDoc,
 }
 
 
@@ -1210,6 +1407,8 @@ def check_bundle(kind: str, name: str, version: str, folder: Path) -> None:
                         raise ValueError(f"personas.json {t.template}: {_one_line(exc)}") from exc
         elif kind == "check_pack":
             _check_check_pack(CheckPackDoc.model_validate(data))
+        elif kind == "voice_model":
+            VoiceModelDoc.model_validate(data)
         else:
             raise ValueError(f"kind is one of {', '.join(KINDS)}")
     except ValidationError as exc:
@@ -1403,8 +1602,8 @@ def _version(
     folder = source / "items" / pub / name / version
     check_bundle(kind, name, version, folder)
     data = pack_dir(folder)
-    if len(data) > MAX_BUNDLE_BYTES:
-        raise ValueError(f"{pub}/{name} {version}: the bundle is over {MAX_BUNDLE_BYTES >> 20} MiB")
+    if len(data) > bundle_cap(kind):
+        raise ValueError(f"{pub}/{name} {version}: the bundle is over {bundle_cap(kind) >> 10} KiB")
     digest = hashlib.sha256(data).hexdigest()
     sig_path = src.sig_path(pub, name, version)
     if not sig_path.exists():
@@ -1681,6 +1880,8 @@ def _bundle_files(kind: str, name: str, title: str, summary: str, url: str | Non
         }]}}
     if kind == "check_pack":
         return {"checks.json": {"bot": "lookout", "overrides": {"LKT-SLOW-01": {"thresholds": {"slow_s": 5}}}}}
+    if kind == "voice_model":
+        return {"voice.json": {**VOICE_SCAFFOLD, "title": title[:60]}}
     if kind == "mcp_preset":
         if not url or not url.startswith("https://"):
             raise ValueError("an MCP preset needs --url, the server's https address")
@@ -2126,8 +2327,8 @@ def try_file(
         raise ValueError(f"{try_pub} is longer than a publisher id may be (40)")
     check_bundle(kind, name, version, folder / version)
     data = pack_dir(folder / version)
-    if len(data) > MAX_BUNDLE_BYTES:
-        raise ValueError(f"{item_id} {version}: the bundle is over {MAX_BUNDLE_BYTES >> 20} MiB")
+    if len(data) > bundle_cap(kind):
+        raise ValueError(f"{item_id} {version}: the bundle is over {bundle_cap(kind) >> 10} KiB")
     key = key or TRY_KEY
     if not key.expanduser().exists():
         keygen(key)
@@ -2326,7 +2527,45 @@ def changes(kind: str, old: dict[str, bytes], new: dict[str, bytes]) -> dict[str
         names = sorted(before)
         return {"added": _minus(list(after), names), "removed": _minus(names, list(after)),
                 "changed": [n for n in names if n in after and after[n] != before[n]]}
+    if kind == "voice_model":
+        return voice_changes(_document(kind, old), _document(kind, new))
     return {"changed_fields": _changed_fields(_document(kind, old), _document(kind, new))}
+
+
+def _packages(doc: dict[str, Any]) -> list[str]:
+    """A voice model's locked packages as ``name==version`` (``name @ <git url>``), names normalized (PEP 503),
+    sorted, each once."""
+    try:
+        reqs = parse_requirements(str(doc.get("requirements") or ""))
+    except ValueError:
+        return []
+    out = set()
+    for r in reqs:
+        name = re.sub(r"[-_.]+", "-", r.name).lower()
+        out.add(f"{name}=={r.version}" if r.version else f"{name} @ {r.git}")
+    return sorted(out)
+
+
+def voice_changes(old: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
+    """What a new ``voice.json`` changes against an old one, as wctl's ``voiceChanges`` (the update preview): voices,
+    locked packages (a new version of one is its old line removed and the new one added) and pinned files."""
+    def voices(d: dict[str, Any]) -> list[str]:
+        return sorted({v.get("id") for v in d.get("voices") or [] if isinstance(v, dict) and v.get("id")})
+
+    def files(d: dict[str, Any]) -> dict[str, str]:
+        return {f.get("path"): f"{f.get('repo')}@{f.get('commit')}:{f.get('sha256')}"
+                for f in d.get("files") or [] if isinstance(f, dict) and f.get("path")}
+
+    before_files, after_files = files(old), files(new)
+    before_pkgs, after_pkgs = _packages(old), _packages(new)
+    return {
+        "added_voices": _minus(voices(new), voices(old)), "removed_voices": _minus(voices(old), voices(new)),
+        "added_packages": _minus(after_pkgs, before_pkgs), "removed_packages": _minus(before_pkgs, after_pkgs),
+        "added_files": sorted(after_files.keys() - before_files.keys()),
+        "removed_files": sorted(before_files.keys() - after_files.keys()),
+        "changed_files": sorted(p for p in before_files.keys() & after_files.keys()
+                                if before_files[p] != after_files[p]),
+    }
 
 
 def _version_files(where: Path, item_id: str, version: str) -> tuple[str, dict[str, bytes]]:

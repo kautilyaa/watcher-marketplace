@@ -30,6 +30,7 @@ KIND_TITLES = {
     "avatar_pack": "Avatar packs",
     "persona_pack": "Bot packs",
     "check_pack": "Check packs",
+    "voice_model": "Voice models",
 }
 
 CSS = """\

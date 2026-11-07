@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'">
+<meta name="referrer" content="no-referrer">
+<title>Pocket TTS voice (English, Kyutai) · Watcher Marketplace</title>
+<link rel="stylesheet" href="../../../catalog.css">
+</head>
+<body>
+<header>
+<p><a href="../../../index.html">← Watcher Marketplace</a></p>
+<h1><span class="icon">🗣️</span>Pocket TTS voice (English, Kyutai)</h1>
+<p>Kyutai&#x27;s Pocket TTS English voice for calls and reading aloud: 258 MB, fast on a laptop CPU, six voices. CC BY 4.0: credit shown where you pick it.</p>
+</header>
+<main>
+<dl class="facts">
+<dt>Id</dt><dd><code>watcher/voice-pocket-tts</code></dd>
+<dt>Kind</dt><dd>Voice models</dd>
+<dt>Publisher</dt><dd>Watcher (verified by this registry)<br><code>did:key:z6MkoHxTnfZh6cS6MQfwyXcd7MtfRtStA1ded9GHgV3F2Up2</code></dd>
+<dt>License</dt><dd>CC-BY-4.0 weights, MIT code</dd>
+<dt>Homepage</dt><dd><a href="https://huggingface.co/kyutai/pocket-tts-without-voice-cloning" rel="noopener noreferrer nofollow">https://huggingface.co/kyutai/pocket-tts-without-voice-cloning</a></dd>
+<dt>Tags</dt><dd><span class="pill">Other</span><span class="pill">voice</span><span class="pill">tts</span><span class="pill">on-device</span><span class="pill">calls</span><span class="pill">english</span></dd>
+</dl>
+<section class="description">
+<p>Kyutai&#x27;s <strong>Pocket TTS</strong> English model (the release without voice cloning) as a voice for calls and reading aloud: natural 24 kHz speech, fast enough for a laptop CPU.</p>
+<ul><li><strong>Download:</strong> 258 MB of model files (weights, tokenizer, six voices) plus PyTorch and the <code>pocket-tts</code> 4.0.1 packages: about 0.2 GB on macOS, about 3 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries).</li><li><strong>Voices:</strong> Alba (the default), Anna, Mary, Charles, Marius and Javert. Only voices whose recordings are CC BY 4.0 or CC0 are included; the voices made from non-commercial datasets are left out.</li><li><strong>Runs on:</strong> the CPU; Kyutai reports about 6x faster than real time on an Apple M4. No speed control.</li><li><strong>Licence:</strong> the weights are <strong>CC BY 4.0</strong>, so Watcher shows this credit wherever the voice is chosen: &quot;Pocket TTS by Kyutai (CC BY 4.0). Voices: Alba by Alba MacKenna (CC BY 4.0); Anna, Mary and Charles from the VCTK corpus, University of Edinburgh (CC BY 4.0); Marius and Javert from Kyutai&#x27;s Unmute voice donations (CC0).&quot; The <code>pocket-tts</code> code is MIT. Kyutai&#x27;s terms forbid impersonating someone&#x27;s voice and deceptive or illegal use.</li></ul>
+<p><strong>How it installs.</strong> This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher&#x27;s local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (<code>uv pip install --require-hashes --no-deps</code>), and runs the engine offline in a separate process. It needs the local voice service (<code>RWCTL_LOCAL_SETUP=1</code>); Kokoro stays the default and takes over whenever this voice isn&#x27;t ready. Uninstalling deletes the files and the venv.</p>
+</section>
+<h2>Versions</h2>
+<ol class="versions">
+<li>
+<h3>1.0.0</h3>
+<p class="muted">Published 2026-11-06 · 39.8 KiB · <a href="../../../bundles/watcher/voice-pocket-tts/1.0.0.tar.gz">bundle</a> · sha256 <code>4a9f7bdeea56cb42599e06a5bc1f64ef9394c9413729a500a466211b35a80638</code></p>
+<pre>First version: `kyutai/pocket-tts-without-voice-cloning` at commit `a7056f505a4a8ca72d8b5fb1440071d6f1a35739` (the commit `pocket-tts` 4.0.1 pins for English): English weights, tokenizer and six CC BY 4.0 / CC0 voices; `pocket-tts` 4.0.1 hash-locked.</pre>
+</li>
+</ol>
+<section class="add">
+<h2>Add it to Watcher</h2>
+<p>An admin adds this registry in Watcher on <b>Marketplace → Registries</b> with its address:</p>
+<pre>https://ayashasw.github.io/watcher-marketplace/</pre>
+<p>Installing an item then takes an admin's approval in Watcher.</p>
+</section>
+</main>
+<footer>Built 2026-11-06T18:46:04.144248Z from a signed index (<a href="../../../index.json">index.json</a>).</footer>
+</body>
+</html>

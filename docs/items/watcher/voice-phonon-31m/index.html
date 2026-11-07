@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'">
+<meta name="referrer" content="no-referrer">
+<title>Phonon-31M voice (English) · Watcher Marketplace</title>
+<link rel="stylesheet" href="../../../catalog.css">
+</head>
+<body>
+<header>
+<p><a href="../../../index.html">← Watcher Marketplace</a></p>
+<h1><span class="icon">🗣️</span>Phonon-31M voice (English)</h1>
+<p>A small, natural English voice for calls and reading aloud: Gradium&#x27;s Phonon-31M, 67 MB, runs on the CPU without PyTorch.</p>
+</header>
+<main>
+<dl class="facts">
+<dt>Id</dt><dd><code>watcher/voice-phonon-31m</code></dd>
+<dt>Kind</dt><dd>Voice models</dd>
+<dt>Publisher</dt><dd>Watcher (verified by this registry)<br><code>did:key:z6MkoHxTnfZh6cS6MQfwyXcd7MtfRtStA1ded9GHgV3F2Up2</code></dd>
+<dt>License</dt><dd>Apache-2.0</dd>
+<dt>Homepage</dt><dd><a href="https://huggingface.co/gradium/phonon-31m-en" rel="noopener noreferrer nofollow">https://huggingface.co/gradium/phonon-31m-en</a></dd>
+<dt>Tags</dt><dd><span class="pill">Other</span><span class="pill">voice</span><span class="pill">tts</span><span class="pill">on-device</span><span class="pill">calls</span><span class="pill">english</span></dd>
+</dl>
+<section class="description">
+<p>Gradium&#x27;s <strong>Phonon-31M</strong> English text-to-speech model as a voice for calls and reading aloud: 31M parameters, 8-bit quantized, natural 24 kHz speech. In Gradium&#x27;s blind listening tests it ranked above Kokoro for US English.</p>
+<ul><li><strong>Download:</strong> 67 MB of model files (q8 GGUF weights, config, tokenizer, seven voices) and about 20 MB of packages (<code>ptts</code> 0.6.0 and NumPy; no PyTorch).</li><li><strong>Voices:</strong> Phonon&#x27;s default plus Easton, Harper, Trevor and Everly (US) and Hugh and Maeve (British), from <code>gradium/phonon-voices</code>. Voices load only from these files; the runtime never fetches one on demand.</li><li><strong>Runs on:</strong> the CPU (macOS arm64; Linux x86_64 with AVX2). Speed control works.</li><li><strong>Licence:</strong> weights, tokenizer and voices Apache-2.0 (Gradium); the <code>ptts</code> runtime MIT OR Apache-2.0.</li></ul>
+<p><strong>How it installs.</strong> This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher&#x27;s local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (<code>uv pip install --require-hashes --no-deps</code>), and runs the engine offline in a separate process. It needs the local voice service (<code>RWCTL_LOCAL_SETUP=1</code>); Kokoro stays the default and takes over whenever this voice isn&#x27;t ready. Uninstalling deletes the files and the venv.</p>
+</section>
+<h2>Versions</h2>
+<ol class="versions">
+<li>
+<h3>1.0.0</h3>
+<p class="muted">Published 2026-11-06 · 4.7 KiB · <a href="../../../bundles/watcher/voice-phonon-31m/1.0.0.tar.gz">bundle</a> · sha256 <code>ed101c15386da3d9cbae451fa2d0f62e186ffd024412fc14bc5aed6856e0b504</code></p>
+<pre>First version: `gradium/phonon-31m-en` at commit `92741c5b07d085ff840e26fea8ce43110b87852f` (config, tokenizer, q8 GGUF, default voice) and six voices from `gradium/phonon-voices` at `0ee17205f254b5abc43b266c8a0f215565c352f7`; `ptts` 0.6.0 hash-locked.</pre>
+</li>
+</ol>
+<section class="add">
+<h2>Add it to Watcher</h2>
+<p>An admin adds this registry in Watcher on <b>Marketplace → Registries</b> with its address:</p>
+<pre>https://ayashasw.github.io/watcher-marketplace/</pre>
+<p>Installing an item then takes an admin's approval in Watcher.</p>
+</section>
+</main>
+<footer>Built 2026-11-06T18:46:04.144248Z from a signed index (<a href="../../../index.json">index.json</a>).</footer>
+</body>
+</html>

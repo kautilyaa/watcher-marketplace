@@ -1,7 +1,7 @@
 {
   "index": {
     "format": 1,
-    "generated_at": "2026-11-04T18:31:46.203384Z",
+    "generated_at": "2026-11-06T18:46:04.144248Z",
     "items": [
       {
         "categories": [
@@ -35,6 +35,138 @@
             "version": "1.0.0"
           }
         ]
+      },
+      {
+        "categories": [
+          "Other"
+        ],
+        "description": "Resemble AI's **Chatterbox Turbo** English text-to-speech model as a voice for calls and reading aloud, with its built-in voice.\n\n- **Large:** 3.0 GB of model files plus PyTorch 2.6 and the `chatterbox-tts` 0.1.7 packages: about 0.3 GB on macOS, about 3.3 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries). Only the files Turbo loads are pinned (`t3_turbo_v1`, `s3gen_meanflow`, `ve`, `conds.pt`, tokenizer); the original Chatterbox's 1 GB `s3gen.safetensors` is not downloaded.\n- **Always watermarked:** every clip carries Resemble AI's **Perth** watermark, inaudible and built to survive MP3 compression and editing. The engine cannot turn it off. Perth comes from a pinned git commit (`ff1c8ac55a976971245cdd53c18d6131ca00d993` of github.com/resemble-ai/Perth, version 1.1.0) because `chatterbox-tts` asks for Perth's moving `master` branch.\n- **Voices:** one built-in voice. No voice cloning, no speed control. May be slow without a GPU.\n- **Licence:** weights MIT (Resemble AI); `chatterbox-tts` and `resemble-perth` MIT.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+        "homepage": "https://huggingface.co/ResembleAI/chatterbox-turbo",
+        "icon": "🗣️",
+        "id": "watcher/voice-chatterbox-turbo",
+        "kind": "voice_model",
+        "license": "MIT",
+        "publisher": "watcher",
+        "summary": "Resemble AI's Chatterbox Turbo English voice. Large (3.0 GB); every clip carries Resemble's inaudible Perth watermark.",
+        "tags": [
+          "voice",
+          "tts",
+          "on-device",
+          "calls",
+          "watermarked"
+        ],
+        "title": "Chatterbox Turbo voice (large, watermarked)",
+        "verified": false,
+        "versions": [
+          {
+            "bundle": "bundles/watcher/voice-chatterbox-turbo/1.0.0.tar.gz",
+            "changelog": "First version: `ResembleAI/chatterbox-turbo` at commit `749d1c1a46eb10492095d68fbcf55691ccf137cd` (the nine files `tts_turbo.py` loads); `chatterbox-tts` 0.1.7 hash-locked, Perth from git commit `ff1c8ac55a976971245cdd53c18d6131ca00d993`.",
+            "published_at": "2026-11-06T18:45:52.051999Z",
+            "sha256": "e89848702de2c4cb9a37f0c612a0ef196c4785e2d39a693255ff91d1692db2d4",
+            "signature": "zZuKt7X4bj5QmZVpMkQyEFqoREiQnqvPMSSuShymxVbR9uNJq2rBDMifypgW8b9i3KNA4nv8hTfdFabNXSRLfFy2",
+            "size": 100085,
+            "version": "1.0.0"
+          }
+        ]
+      },
+      {
+        "categories": [
+          "Other"
+        ],
+        "description": "Gradium's **Phonon-31M** English text-to-speech model as a voice for calls and reading aloud: 31M parameters, 8-bit quantized, natural 24 kHz speech. In Gradium's blind listening tests it ranked above Kokoro for US English.\n\n- **Download:** 67 MB of model files (q8 GGUF weights, config, tokenizer, seven voices) and about 20 MB of packages (`ptts` 0.6.0 and NumPy; no PyTorch).\n- **Voices:** Phonon's default plus Easton, Harper, Trevor and Everly (US) and Hugh and Maeve (British), from `gradium/phonon-voices`. Voices load only from these files; the runtime never fetches one on demand.\n- **Runs on:** the CPU (macOS arm64; Linux x86_64 with AVX2). Speed control works.\n- **Licence:** weights, tokenizer and voices Apache-2.0 (Gradium); the `ptts` runtime MIT OR Apache-2.0.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+        "homepage": "https://huggingface.co/gradium/phonon-31m-en",
+        "icon": "🗣️",
+        "id": "watcher/voice-phonon-31m",
+        "kind": "voice_model",
+        "license": "Apache-2.0",
+        "publisher": "watcher",
+        "summary": "A small, natural English voice for calls and reading aloud: Gradium's Phonon-31M, 67 MB, runs on the CPU without PyTorch.",
+        "tags": [
+          "voice",
+          "tts",
+          "on-device",
+          "calls",
+          "english"
+        ],
+        "title": "Phonon-31M voice (English)",
+        "verified": false,
+        "versions": [
+          {
+            "bundle": "bundles/watcher/voice-phonon-31m/1.0.0.tar.gz",
+            "changelog": "First version: `gradium/phonon-31m-en` at commit `92741c5b07d085ff840e26fea8ce43110b87852f` (config, tokenizer, q8 GGUF, default voice) and six voices from `gradium/phonon-voices` at `0ee17205f254b5abc43b266c8a0f215565c352f7`; `ptts` 0.6.0 hash-locked.",
+            "published_at": "2026-11-06T18:45:52.051999Z",
+            "sha256": "ed101c15386da3d9cbae451fa2d0f62e186ffd024412fc14bc5aed6856e0b504",
+            "signature": "z232fVbZJ6Ke3U42aaPRKGMvMtUKVZefPqR9hKP3yt2XeRpY1G7nXqdMcxtYuFEe3ur6u4mHMiPoPLwevLbJWTes3",
+            "size": 4808,
+            "version": "1.0.0"
+          }
+        ]
+      },
+      {
+        "categories": [
+          "Other"
+        ],
+        "description": "Kyutai's **Pocket TTS** English model (the release without voice cloning) as a voice for calls and reading aloud: natural 24 kHz speech, fast enough for a laptop CPU.\n\n- **Download:** 258 MB of model files (weights, tokenizer, six voices) plus PyTorch and the `pocket-tts` 4.0.1 packages: about 0.2 GB on macOS, about 3 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries).\n- **Voices:** Alba (the default), Anna, Mary, Charles, Marius and Javert. Only voices whose recordings are CC BY 4.0 or CC0 are included; the voices made from non-commercial datasets are left out.\n- **Runs on:** the CPU; Kyutai reports about 6x faster than real time on an Apple M4. No speed control.\n- **Licence:** the weights are **CC BY 4.0**, so Watcher shows this credit wherever the voice is chosen: \"Pocket TTS by Kyutai (CC BY 4.0). Voices: Alba by Alba MacKenna (CC BY 4.0); Anna, Mary and Charles from the VCTK corpus, University of Edinburgh (CC BY 4.0); Marius and Javert from Kyutai's Unmute voice donations (CC0).\" The `pocket-tts` code is MIT. Kyutai's terms forbid impersonating someone's voice and deceptive or illegal use.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+        "homepage": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning",
+        "icon": "🗣️",
+        "id": "watcher/voice-pocket-tts",
+        "kind": "voice_model",
+        "license": "CC-BY-4.0 weights, MIT code",
+        "publisher": "watcher",
+        "summary": "Kyutai's Pocket TTS English voice for calls and reading aloud: 258 MB, fast on a laptop CPU, six voices. CC BY 4.0: credit shown where you pick it.",
+        "tags": [
+          "voice",
+          "tts",
+          "on-device",
+          "calls",
+          "english"
+        ],
+        "title": "Pocket TTS voice (English, Kyutai)",
+        "verified": false,
+        "versions": [
+          {
+            "bundle": "bundles/watcher/voice-pocket-tts/1.0.0.tar.gz",
+            "changelog": "First version: `kyutai/pocket-tts-without-voice-cloning` at commit `a7056f505a4a8ca72d8b5fb1440071d6f1a35739` (the commit `pocket-tts` 4.0.1 pins for English): English weights, tokenizer and six CC BY 4.0 / CC0 voices; `pocket-tts` 4.0.1 hash-locked.",
+            "published_at": "2026-11-06T18:45:52.051999Z",
+            "sha256": "4a9f7bdeea56cb42599e06a5bc1f64ef9394c9413729a500a466211b35a80638",
+            "signature": "z2ewAFqqKXHwf5Q9WXMtBsEAu4yonu9ayosrFJi3yZqUqQb7tPspBtHy3xfSedVsCFtdWndrQ5k7TJQGXPob5TmbR",
+            "size": 40779,
+            "version": "1.0.0"
+          }
+        ]
+      },
+      {
+        "categories": [
+          "Other"
+        ],
+        "description": "Alibaba Qwen's **Qwen3-TTS 12Hz 0.6B CustomVoice** as a voice for calls and reading aloud, with its two English speakers.\n\n- **Large:** 2.5 GB of model files (model and speech tokenizer weights, configs, tokenizer) plus PyTorch and the `qwen-tts` 0.1.1 packages: about 0.3 GB on macOS, about 4.4 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries).\n- **May be slow without a GPU:** Qwen documents it on CUDA only; its speed on a CPU or Apple silicon is not measured. Prefer Phonon-31M or Pocket TTS on a laptop.\n- **Voices:** Aiden (American, male; the default) and Ryan (male). No speed control.\n- **Packages:** `qwen-tts` 0.1.1 pins `transformers` 4.57.3 and `accelerate` 1.12.0; this lock keeps `torch`/`torchaudio` 2.10 and `librosa` 0.11, the releases current when `qwen-tts` 0.1.1 shipped. `sox` has no wheel and installs from source.\n- **Licence:** weights and code Apache-2.0.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+        "homepage": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+        "icon": "🗣️",
+        "id": "watcher/voice-qwen3-tts-0-6b",
+        "kind": "voice_model",
+        "license": "Apache-2.0",
+        "publisher": "watcher",
+        "summary": "Alibaba Qwen's Qwen3-TTS 0.6B CustomVoice with its two English speakers. Large (2.5 GB) and may be slow without a GPU.",
+        "tags": [
+          "voice",
+          "tts",
+          "on-device",
+          "calls",
+          "large"
+        ],
+        "title": "Qwen3-TTS 0.6B voice (large)",
+        "verified": false,
+        "versions": [
+          {
+            "bundle": "bundles/watcher/voice-qwen3-tts-0-6b/1.0.0.tar.gz",
+            "changelog": "First version: `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` at commit `85e237c12c027371202489a0ec509ded67b5e4b5` (model, speech tokenizer, configs, tokenizer); `qwen-tts` 0.1.1 hash-locked with torch 2.10 and librosa 0.11.",
+            "published_at": "2026-11-06T18:45:52.051999Z",
+            "sha256": "8b52c6f4b551cd7de4942fd950b7d0f756598a7bfd2fd63eb526ef1d52a47c71",
+            "signature": "z288TsrRSNZNNm9gkzUnuGqDYayDZivyuUPVoVb3cn7woib9A26VmUMsEe2jJ8TXeJD6ZXx5Z4n4QsVxv1145pqye",
+            "size": 78976,
+            "version": "1.0.0"
+          }
+        ]
       }
     ],
     "key": "did:key:z6Mkm8G2KVKPtF8RudfvPP2J6BDQSmpmGkQUMw9FWdwgWdfS",
@@ -51,5 +183,5 @@
     "revoked": [],
     "url": "https://ayashasw.github.io/watcher-marketplace/"
   },
-  "signature": "z28NxZz56yzR1HubRXcEFLrhie5vAjSkm8ZBJQCqEKQyDrKY3fJA2A612HGBnkVqayP4CX1exymZveAM2kC2W55AS"
+  "signature": "z5njgQMLnvspwMvcJ889gKf1noVCBDZhChNtNTB1bN7uhGYNtfZwNquXTe1E3ZVfTuGBy1jEJho2Fiom54UEy8chS"
 }

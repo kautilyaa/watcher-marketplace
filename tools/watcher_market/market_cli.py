@@ -15,7 +15,7 @@ from typing import Any
 # market.KINDS, written out: the parser is built without importing market (a test pins them).
 KINDS_CHOICES = (
     "extension", "skill_pack", "bot_template", "mcp_preset", "sticker_pack",
-    "lens_suite", "avatar_pack", "persona_pack", "check_pack",
+    "lens_suite", "avatar_pack", "persona_pack", "check_pack", "voice_model",
 )
 
 

@@ -1,0 +1,19 @@
+{
+  "kind": "voice_model",
+  "title": "Chatterbox Turbo voice (large, watermarked)",
+  "summary": "Resemble AI's Chatterbox Turbo English voice. Large (3.0 GB); every clip carries Resemble's inaudible Perth watermark.",
+  "description": "Resemble AI's **Chatterbox Turbo** English text-to-speech model as a voice for calls and reading aloud, with its built-in voice.\n\n- **Large:** 3.0 GB of model files plus PyTorch 2.6 and the `chatterbox-tts` 0.1.7 packages: about 0.3 GB on macOS, about 3.3 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries). Only the files Turbo loads are pinned (`t3_turbo_v1`, `s3gen_meanflow`, `ve`, `conds.pt`, tokenizer); the original Chatterbox's 1 GB `s3gen.safetensors` is not downloaded.\n- **Always watermarked:** every clip carries Resemble AI's **Perth** watermark, inaudible and built to survive MP3 compression and editing. The engine cannot turn it off. Perth comes from a pinned git commit (`ff1c8ac55a976971245cdd53c18d6131ca00d993` of github.com/resemble-ai/Perth, version 1.1.0) because `chatterbox-tts` asks for Perth's moving `master` branch.\n- **Voices:** one built-in voice. No voice cloning, no speed control. May be slow without a GPU.\n- **Licence:** weights MIT (Resemble AI); `chatterbox-tts` and `resemble-perth` MIT.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+  "categories": [
+    "Other"
+  ],
+  "tags": [
+    "voice",
+    "tts",
+    "on-device",
+    "calls",
+    "watermarked"
+  ],
+  "homepage": "https://huggingface.co/ResembleAI/chatterbox-turbo",
+  "license": "MIT",
+  "icon": "🗣️"
+}

@@ -1,7 +1,7 @@
 # Watcher Marketplace
 
-The official registry for Watcher's Marketplace: extensions, skill packs, starter bots (bot templates), MCP presets
-and sticker packs. The site under `docs/` is served by GitHub Pages at
+The official registry for Watcher's Marketplace: extensions, skill packs, starter bots (bot templates), MCP presets,
+sticker packs and voice models. The site under `docs/` is served by GitHub Pages at
 <https://ayashasw.github.io/watcher-marketplace/>; Watcher fetches `index.json` and the bundles from there and
 verifies every signature before it shows or installs anything.
 
@@ -29,8 +29,8 @@ one of the newer kinds (`watcher market new --kind <kind>` writes a working exam
 `skill_pack`, `bot_template`, `mcp_preset`, `sticker_pack`, `lens_suite` (a Lens pipeline and its cases; no custom
 scorers), `avatar_pack` (characters drawn from a fixed set of SVG shapes, ids `m-…`), `persona_pack` (2–12 starter
 bots and the bot-chat links between them), `check_pack` (tuning for checks a bot already has; it never adds,
-turns off or caps a check). Categories: Productivity, Engineering, Support, Marketing, Finance, Data, Fun,
-Integrations.
+turns off or caps a check), `voice_model` (`voice.json`: pins of an on-device voice, see [Voice models](#voice-models)).
+Categories: Productivity, Engineering, Support, Marketing, Finance, Data, Fun, Integrations, Healthcare, Other.
 
 A requirement's `range` is `*`, `^1.2.0`, `~1.2.0`, a bare version, or up to 3 comparators (`>=1.0.0 <2.0.0`).
 
@@ -132,3 +132,39 @@ trust.
 - `watcher/instagram` (skill pack, MIT): Jake Schincariol's
   [instagram-agent-skill](https://github.com/Jakeschincariol/instagram-agent-skill); its LICENSE and README ship
   inside the bundle.
+- `watcher/voice-phonon-31m`, `watcher/voice-pocket-tts`, `watcher/voice-qwen3-tts-0-6b`,
+  `watcher/voice-chatterbox-turbo` (voice models): see [Voice models](#voice-models).
+
+## Voice models
+
+A `voice_model` bundle holds one `voice.json` and never weights or code. It names one of Watcher's built-in engines
+(`phonon`, `pocket_tts`, `qwen3_tts`, `chatterbox_turbo`), pins each Hugging Face file (repo, 40-hex commit, path,
+size, SHA-256 or git blob id; huggingface.co only) and carries a hash-locked requirements text: every package `==`
+with `--hash=sha256:` lines, and no index URLs or other options. The only exception is Chatterbox's Perth
+watermarker, taken from a git commit. Watcher's local voice service downloads and checks the files, installs the
+lock into a venv of the engine's own with `uv pip install --require-hashes --no-deps`, and runs the engine offline
+in a separate process.
+
+Only voices we trust are listed: an open licence that allows commercial use, an ungated download from the model's
+own organisation, every file pinned to a commit, and packages from PyPI with hashes.
+
+| Item | Model (commit) | Files | Licence |
+|---|---|---|---|
+| `watcher/voice-phonon-31m` | `gradium/phonon-31m-en` (`92741c5b`) and 6 voices from `gradium/phonon-voices` (`0ee17205`) | 67 MB | Apache-2.0; `ptts` runtime MIT OR Apache-2.0 |
+| `watcher/voice-pocket-tts` | `kyutai/pocket-tts-without-voice-cloning` (`a7056f50`), English and 6 voices | 258 MB | CC BY 4.0 (credit shown where the voice is chosen); code MIT |
+| `watcher/voice-qwen3-tts-0-6b` | `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` (`85e237c1`) | 2.5 GB, may be slow without a GPU | Apache-2.0 |
+| `watcher/voice-chatterbox-turbo` | `ResembleAI/chatterbox-turbo` (`749d1c1a`), only the files Turbo loads | 3.0 GB, always watermarked (Perth) | MIT |
+
+Pocket TTS lists only voices whose recordings are CC BY 4.0 or CC0; voices made from non-commercial datasets
+(Expresso, EARS) are left out.
+
+The locks come from
+`uv pip compile pyproject.toml --universal --generate-hashes --python-version 3.12 --no-annotate --index-url
+https://pypi.org/simple --exclude-newer <date>` on a one-line project (`requires-python = ">=3.12,<3.14"`) whose
+dependencies are the engine's package. The first comment lines of each lock name them. To update a voice model:
+read the new commit's files from `https://huggingface.co/api/models/<repo>/paths-info/<commit>`, compile the lock
+again, then `market version`, lint and sign.
+
+**Not listed: Orpheus** (`canopylabs/orpheus-3b-0.1-ft`). Its download is gated (accept terms and sign in), it is
+fine-tuned from Meta's Llama 3.2 3B, so the Llama 3.2 licence comes with it, the weights are about 15 GB, and its
+official runtime (`orpheus-speech`) needs vLLM, which means a CUDA GPU; the CPU route is a third-party package.

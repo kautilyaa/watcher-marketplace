@@ -1,0 +1,19 @@
+{
+  "kind": "voice_model",
+  "title": "Pocket TTS voice (English, Kyutai)",
+  "summary": "Kyutai's Pocket TTS English voice for calls and reading aloud: 258 MB, fast on a laptop CPU, six voices. CC BY 4.0: credit shown where you pick it.",
+  "description": "Kyutai's **Pocket TTS** English model (the release without voice cloning) as a voice for calls and reading aloud: natural 24 kHz speech, fast enough for a laptop CPU.\n\n- **Download:** 258 MB of model files (weights, tokenizer, six voices) plus PyTorch and the `pocket-tts` 4.0.1 packages: about 0.2 GB on macOS, about 3 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries).\n- **Voices:** Alba (the default), Anna, Mary, Charles, Marius and Javert. Only voices whose recordings are CC BY 4.0 or CC0 are included; the voices made from non-commercial datasets are left out.\n- **Runs on:** the CPU; Kyutai reports about 6x faster than real time on an Apple M4. No speed control.\n- **Licence:** the weights are **CC BY 4.0**, so Watcher shows this credit wherever the voice is chosen: \"Pocket TTS by Kyutai (CC BY 4.0). Voices: Alba by Alba MacKenna (CC BY 4.0); Anna, Mary and Charles from the VCTK corpus, University of Edinburgh (CC BY 4.0); Marius and Javert from Kyutai's Unmute voice donations (CC0).\" The `pocket-tts` code is MIT. Kyutai's terms forbid impersonating someone's voice and deceptive or illegal use.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+  "categories": [
+    "Other"
+  ],
+  "tags": [
+    "voice",
+    "tts",
+    "on-device",
+    "calls",
+    "english"
+  ],
+  "homepage": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning",
+  "license": "CC-BY-4.0 weights, MIT code",
+  "icon": "🗣️"
+}

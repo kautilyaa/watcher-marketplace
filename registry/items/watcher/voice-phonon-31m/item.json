@@ -1,0 +1,19 @@
+{
+  "kind": "voice_model",
+  "title": "Phonon-31M voice (English)",
+  "summary": "A small, natural English voice for calls and reading aloud: Gradium's Phonon-31M, 67 MB, runs on the CPU without PyTorch.",
+  "description": "Gradium's **Phonon-31M** English text-to-speech model as a voice for calls and reading aloud: 31M parameters, 8-bit quantized, natural 24 kHz speech. In Gradium's blind listening tests it ranked above Kokoro for US English.\n\n- **Download:** 67 MB of model files (q8 GGUF weights, config, tokenizer, seven voices) and about 20 MB of packages (`ptts` 0.6.0 and NumPy; no PyTorch).\n- **Voices:** Phonon's default plus Easton, Harper, Trevor and Everly (US) and Hugh and Maeve (British), from `gradium/phonon-voices`. Voices load only from these files; the runtime never fetches one on demand.\n- **Runs on:** the CPU (macOS arm64; Linux x86_64 with AVX2). Speed control works.\n- **Licence:** weights, tokenizer and voices Apache-2.0 (Gradium); the `ptts` runtime MIT OR Apache-2.0.\n\n**How it installs.** This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher's local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (`uv pip install --require-hashes --no-deps`), and runs the engine offline in a separate process. It needs the local voice service (`RWCTL_LOCAL_SETUP=1`); Kokoro stays the default and takes over whenever this voice isn't ready. Uninstalling deletes the files and the venv.",
+  "categories": [
+    "Other"
+  ],
+  "tags": [
+    "voice",
+    "tts",
+    "on-device",
+    "calls",
+    "english"
+  ],
+  "homepage": "https://huggingface.co/gradium/phonon-31m-en",
+  "license": "Apache-2.0",
+  "icon": "🗣️"
+}

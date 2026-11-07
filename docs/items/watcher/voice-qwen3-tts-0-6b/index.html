@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'">
+<meta name="referrer" content="no-referrer">
+<title>Qwen3-TTS 0.6B voice (large) · Watcher Marketplace</title>
+<link rel="stylesheet" href="../../../catalog.css">
+</head>
+<body>
+<header>
+<p><a href="../../../index.html">← Watcher Marketplace</a></p>
+<h1><span class="icon">🗣️</span>Qwen3-TTS 0.6B voice (large)</h1>
+<p>Alibaba Qwen&#x27;s Qwen3-TTS 0.6B CustomVoice with its two English speakers. Large (2.5 GB) and may be slow without a GPU.</p>
+</header>
+<main>
+<dl class="facts">
+<dt>Id</dt><dd><code>watcher/voice-qwen3-tts-0-6b</code></dd>
+<dt>Kind</dt><dd>Voice models</dd>
+<dt>Publisher</dt><dd>Watcher (verified by this registry)<br><code>did:key:z6MkoHxTnfZh6cS6MQfwyXcd7MtfRtStA1ded9GHgV3F2Up2</code></dd>
+<dt>License</dt><dd>Apache-2.0</dd>
+<dt>Homepage</dt><dd><a href="https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice" rel="noopener noreferrer nofollow">https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice</a></dd>
+<dt>Tags</dt><dd><span class="pill">Other</span><span class="pill">voice</span><span class="pill">tts</span><span class="pill">on-device</span><span class="pill">calls</span><span class="pill">large</span></dd>
+</dl>
+<section class="description">
+<p>Alibaba Qwen&#x27;s <strong>Qwen3-TTS 12Hz 0.6B CustomVoice</strong> as a voice for calls and reading aloud, with its two English speakers.</p>
+<ul><li><strong>Large:</strong> 2.5 GB of model files (model and speech tokenizer weights, configs, tokenizer) plus PyTorch and the <code>qwen-tts</code> 0.1.1 packages: about 0.3 GB on macOS, about 4.4 GB on Linux x86_64 (PyTorch from PyPI brings NVIDIA CUDA libraries).</li><li><strong>May be slow without a GPU:</strong> Qwen documents it on CUDA only; its speed on a CPU or Apple silicon is not measured. Prefer Phonon-31M or Pocket TTS on a laptop.</li><li><strong>Voices:</strong> Aiden (American, male; the default) and Ryan (male). No speed control.</li><li><strong>Packages:</strong> <code>qwen-tts</code> 0.1.1 pins <code>transformers</code> 4.57.3 and <code>accelerate</code> 1.12.0; this lock keeps <code>torch</code>/<code>torchaudio</code> 2.10 and <code>librosa</code> 0.11, the releases current when <code>qwen-tts</code> 0.1.1 shipped. <code>sox</code> has no wheel and installs from source.</li><li><strong>Licence:</strong> weights and code Apache-2.0.</li></ul>
+<p><strong>How it installs.</strong> This item holds no weights or code: it pins each Hugging Face file to a commit with its size and SHA-256 (or git blob id), and every Python package to an exact version with its hashes. After an admin approves the install, Watcher&#x27;s local voice service downloads the pinned files from huggingface.co, checks each one, installs the packages into a venv of their own (<code>uv pip install --require-hashes --no-deps</code>), and runs the engine offline in a separate process. It needs the local voice service (<code>RWCTL_LOCAL_SETUP=1</code>); Kokoro stays the default and takes over whenever this voice isn&#x27;t ready. Uninstalling deletes the files and the venv.</p>
+</section>
+<h2>Versions</h2>
+<ol class="versions">
+<li>
+<h3>1.0.0</h3>
+<p class="muted">Published 2026-11-06 · 77.1 KiB · <a href="../../../bundles/watcher/voice-qwen3-tts-0-6b/1.0.0.tar.gz">bundle</a> · sha256 <code>8b52c6f4b551cd7de4942fd950b7d0f756598a7bfd2fd63eb526ef1d52a47c71</code></p>
+<pre>First version: `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` at commit `85e237c12c027371202489a0ec509ded67b5e4b5` (model, speech tokenizer, configs, tokenizer); `qwen-tts` 0.1.1 hash-locked with torch 2.10 and librosa 0.11.</pre>
+</li>
+</ol>
+<section class="add">
+<h2>Add it to Watcher</h2>
+<p>An admin adds this registry in Watcher on <b>Marketplace → Registries</b> with its address:</p>
+<pre>https://ayashasw.github.io/watcher-marketplace/</pre>
+<p>Installing an item then takes an admin's approval in Watcher.</p>
+</section>
+</main>
+<footer>Built 2026-11-06T18:46:04.144248Z from a signed index (<a href="../../../index.json">index.json</a>).</footer>
+</body>
+</html>
